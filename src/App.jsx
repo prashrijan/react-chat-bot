@@ -1,15 +1,12 @@
-import { useState } from "react";
 import axios from "axios";
+import React, { useState } from "react";
 
-function App() {
+const App = () => {
   const [question, setQuestion] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
   const generateAnswer = async () => {
-    if (!question.trim()) return;
-
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true);
     const endPoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${
       import.meta.env.VITE_API_KEY
     }`;
@@ -24,21 +21,19 @@ function App() {
 
     try {
       const res = await axios({
-        url: endPoint,
         method: "POST",
+        url: endPoint,
         data: requestBody,
       });
 
-      const newAnswer = res.data.candidates[0].content.parts[0].text;
+      const newAnwer = res.data.candidates[0].content.parts[0].text;
 
-      // Add the new question and answer to the chat history
-      setChatHistory((prev) => [...prev, { question, answer: newAnswer }]);
-
-      setQuestion(""); // Clear the input field
+      setChatHistory((prev) => [...prev, { question, answer: newAnwer }]);
+      setQuestion("");
     } catch (error) {
-      console.error("Error generating answer:", error);
+      console.log(`Error fetching data: ${error.message}`);
     } finally {
-      setIsLoading(false); // Reset loading state
+      setIsLoading(false);
     }
   };
 
@@ -47,7 +42,6 @@ function App() {
       generateAnswer();
     }
   };
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="w-full max-w-2xl bg-white rounded-lg shadow-xl flex flex-col">
@@ -59,25 +53,27 @@ function App() {
         {/* Chat History */}
         <div className="flex-1 overflow-y-auto p-4 bg-gray-100">
           {chatHistory.length > 0 ? (
-            chatHistory.map((chat, index) => (
-              <div key={index} className="mb-4">
-                <div className="text-gray-700">
-                  <p className="font-medium text-blue-600">You:</p>
-                  <p className="p-2 bg-blue-100 rounded-lg">{chat.question}</p>
+            chatHistory.map((chat, index) => {
+              return (
+                <div key={index} className="mb-4">
+                  <div className="text-gray-700">
+                    <p className="font-medium text-blue-600">You:</p>
+                    <p className="p-2 bg-blue-100 rounded-lg">
+                      {chat.question}
+                    </p>
+                  </div>
+                  <div className="mt-2 text-gray-700">
+                    <p className="font-medium text-green-600">Bot:</p>
+                    <p className="p-2 bg-green-100 rounded-lg">{chat.answer}</p>
+                  </div>
                 </div>
-                <div className="mt-2 text-gray-700">
-                  <p className="font-medium text-green-600">Bot:</p>
-                  <p className="p-2 bg-green-100 rounded-lg">{chat.answer}</p>
-                </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <p className="text-gray-500 text-center mt-4">
-              Start the conversation by typing a question!
+              Hello, I am PrashAI powered by Google Gemini.
             </p>
           )}
-
-          {/* Loading Message */}
           {isLoading && (
             <div className="text-center text-gray-600 mt-4">
               <p className="italic">Thinking...</p>
@@ -85,7 +81,6 @@ function App() {
           )}
         </div>
 
-        {/* Input Section */}
         <div className="p-4 bg-white border-t border-gray-300 flex items-center space-x-2">
           <input
             type="text"
@@ -94,7 +89,7 @@ function App() {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={handleKeyDown}
-            disabled={isLoading} // Disable input during loading
+            disabled={isLoading}
           />
           <button
             className={`px-4 py-2 text-white rounded-lg ${
@@ -103,15 +98,15 @@ function App() {
                 : "bg-blue-500 hover:bg-blue-600"
             }`}
             type="button"
+            disabled={isLoading}
             onClick={generateAnswer}
-            disabled={isLoading} // Disable button during loading
           >
-            {isLoading ? "Loading..." : "Send"}
+            {isLoading ? "Loading..." : "Ask"}
           </button>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default App;
