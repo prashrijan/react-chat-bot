@@ -6,7 +6,7 @@ function App() {
   const [answer, setAnswer] = useState("");
 
   const generateAnswer = async () => {
-    setAnswer("Thinking");
+    setAnswer("Thinking....");
     const endPoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${
       import.meta.env.VITE_API_KEY
     }`;
@@ -45,7 +45,7 @@ function App() {
             {answer && (
               <div className="mt-4 text-gray-700">
                 <p className="font-medium">Bot:</p>
-                <pre>{answer}</pre>
+                <pre className="text-wrap">{answer}</pre>
               </div>
             )}
           </div>
