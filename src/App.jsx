@@ -71,7 +71,7 @@ const App = () => {
             })
           ) : (
             <p className="text-gray-500 text-center mt-4">
-              Hello, I am PrashAI powered by Google Gemini.
+              Hello, I am PrashGPT powered by Google Gemini.
             </p>
           )}
           {isLoading && (
