@@ -45,7 +45,6 @@ function App() {
     }
   };
 
-  console.log(chatHistory);
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="w-full max-w-2xl bg-white rounded-lg shadow-xl flex flex-col">
@@ -71,7 +70,7 @@ function App() {
             ))
           ) : (
             <p className="text-gray-500 text-center mt-4">
-              Start the conversation by typing a question!
+              Hi, I am a chat bot made with React powered by Google Gemini
             </p>
           )}
         </div>
