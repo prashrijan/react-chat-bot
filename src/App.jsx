@@ -43,7 +43,7 @@ const App = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200">
+    <div className="flex items-center justify-center min-h-screen bg-gray-200 px-5">
       <div className="w-full max-w-2xl bg-white rounded-lg shadow-xl flex flex-col">
         {/* Header */}
         <div className="p-4 bg-blue-600 text-white rounded-t-lg">
