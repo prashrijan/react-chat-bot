@@ -4,10 +4,12 @@ import axios from "axios";
 function App() {
   const [question, setQuestion] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const generateAnswer = async () => {
     if (!question.trim()) return;
 
+    setIsLoading(true); // Set loading state to true
     const endPoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${
       import.meta.env.VITE_API_KEY
     }`;
@@ -32,10 +34,11 @@ function App() {
       // Add the new question and answer to the chat history
       setChatHistory((prev) => [...prev, { question, answer: newAnswer }]);
 
-      // Clear the input field
-      setQuestion("");
+      setQuestion(""); // Clear the input field
     } catch (error) {
       console.error("Error generating answer:", error);
+    } finally {
+      setIsLoading(false); // Reset loading state
     }
   };
 
@@ -70,8 +73,15 @@ function App() {
             ))
           ) : (
             <p className="text-gray-500 text-center mt-4">
-              Hi, I am a chat bot made with React powered by Google Gemini
+              Start the conversation by typing a question!
             </p>
+          )}
+
+          {/* Loading Message */}
+          {isLoading && (
+            <div className="text-center text-gray-600 mt-4">
+              <p className="italic">Thinking...</p>
+            </div>
           )}
         </div>
 
@@ -84,13 +94,19 @@ function App() {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={handleKeyDown}
+            disabled={isLoading} // Disable input during loading
           />
           <button
-            className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+            className={`px-4 py-2 text-white rounded-lg ${
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+            }`}
             type="button"
             onClick={generateAnswer}
+            disabled={isLoading} // Disable button during loading
           >
-            Send
+            {isLoading ? "Loading..." : "Send"}
           </button>
         </div>
       </div>
